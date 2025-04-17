@@ -1,6 +1,5 @@
 (function () {
     const bgImages = [
-        'https://picsum.photos/2500/1400?random=0.9706441778165951&mask=circle&blur=1',
         'https://picsum.photos/2500/1400?random=0.123456789&mask=circle&blur=1',
         'https://picsum.photos/2500/1400?random=0.234567890&mask=circle&blur=1',
         'https://picsum.photos/2500/1400?random=0.345678901&mask=circle&blur=1',
@@ -58,14 +57,14 @@
     let currentMask = maskLayer1;
     let nextLayer = backgroundLayer2;
     let nextMask = maskLayer2;
-    let currentImage = bgImages[0];
+    let currentImage = bgImages[1];
     let isTransitioning = false;
 
     function getMaskColor() {
-        const isDarkTheme = document.body.classList.contains('dark-theme');
+        // Since both themes use the same values, we can simplify this
         return {
-            color: isDarkTheme ? 'var(--bg-primary)' : 'var(--bg-primary)',
-            baseOpacity: isDarkTheme ? '0.8' : '0.7'
+            color: 'var(--bg-primary)',
+            baseOpacity: document.body.classList.contains('dark-theme') ? '0.8' : '0.7'
         };
     }
 
@@ -75,7 +74,8 @@
         if (instant) {
             bgLayer.style.transition = 'none';
             maskLayer.style.transition = 'none';
-            bgLayer.offsetHeight; // Force reflow
+            // Force reflow by reading layout property
+            const _ = bgLayer.offsetHeight;
         }
 
         bgLayer.style.backgroundImage = `url('${image}')`;
@@ -87,7 +87,8 @@
         }
 
         if (instant) {
-            bgLayer.offsetHeight; // Force reflow
+            // Force reflow by reading layout property
+            const _ = bgLayer.offsetHeight;
             bgLayer.style.transition = layerStyle.transition;
             maskLayer.style.transition = layerStyle.transition;
         }
@@ -168,7 +169,7 @@
     let resizeTimeout;
     window.addEventListener('resize', () => {
         clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(handleThemeChange, 1000);
+        resizeTimeout = setTimeout(handleThemeChange, 100);
     });
 
     // Expose to global scope
